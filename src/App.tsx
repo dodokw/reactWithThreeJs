@@ -1,9 +1,39 @@
+import { useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
 import { Scene } from "./Scene";
 import "./App.css";
 
 function App() {
+  const featuresRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    // Intersection Observer for scroll-based animations (Prezi-style)
+    const observerOptions = {
+      threshold: 0.2,
+      rootMargin: "0px 0px -100px 0px",
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
+      });
+    }, observerOptions);
+
+    // Observe features section
+    if (featuresRef.current) {
+      observer.observe(featuresRef.current);
+    }
+
+    return () => {
+      if (featuresRef.current) {
+        observer.unobserve(featuresRef.current);
+      }
+    };
+  }, []);
+
   return (
     <div className="app-container">
       {/* Header */}
@@ -75,7 +105,7 @@ function App() {
       </section>
 
       {/* Features Section */}
-      <section className="features-section" id="features">
+      <section className="features-section" id="features" ref={featuresRef}>
         <div className="features-container">
           <h2 className="section-title">Amazing Features</h2>
           <p className="section-subtitle">
