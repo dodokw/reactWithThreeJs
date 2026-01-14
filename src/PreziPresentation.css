@@ -1,0 +1,498 @@
+.prezi-container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prezi-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Prezi Canvas Wrapper - 줌 효과의 핵심 */
+.prezi-canvas-wrapper {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center center;
+}
+
+.prezi-canvas-wrapper.zoomed {
+  pointer-events: none;
+}
+
+/* Title */
+.prezi-title {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 5;
+  animation: fadeIn 1s ease-out;
+}
+
+.prezi-main-title {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #ffffff 0%, #00d4ff 50%, #ff006e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s ease-in-out infinite;
+  background-size: 200% auto;
+  letter-spacing: -1px;
+}
+
+.prezi-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  color: var(--text-secondary);
+  font-weight: 300;
+}
+
+/* Projects Grid */
+.prezi-projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 200px);
+  grid-template-rows: repeat(3, 200px);
+  gap: 2.5rem;
+  position: relative;
+}
+
+/* Project Circle */
+.prezi-project-circle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.prezi-project-circle::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 212, 255, 0.1),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.prezi-project-circle:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.06);
+  border-width: 4px;
+  box-shadow: 0 0 40px currentColor;
+}
+
+.prezi-project-circle:hover::before {
+  opacity: 1;
+}
+
+.prezi-project-circle.active {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.prezi-circle-icon {
+  font-size: 3rem;
+  margin-bottom: 0.8rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+.prezi-circle-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+  text-align: center;
+}
+
+.prezi-circle-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Detail Panel */
+.prezi-detail-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  width: 90%;
+  max-width: 800px;
+  max-height: 85vh;
+  background: rgba(10, 10, 15, 0.95);
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 25px 100px rgba(0, 0, 0, 0.5);
+  animation: zoomIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: all;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.prezi-close-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prezi-close-btn:hover {
+  background: rgba(255, 0, 110, 0.3);
+  border-color: #ff006e;
+  transform: rotate(90deg);
+}
+
+.prezi-detail-content {
+  max-height: calc(85vh - 12rem);
+  overflow-y: auto;
+  padding-right: 1rem;
+  flex: 1;
+}
+
+.prezi-detail-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.prezi-detail-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.prezi-detail-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00d4ff, #ff006e);
+  border-radius: 3px;
+}
+
+.prezi-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.prezi-detail-icon {
+  font-size: 4rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+.prezi-detail-title {
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+}
+
+.prezi-detail-subtitle {
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  color: var(--text-secondary);
+  font-weight: 300;
+}
+
+.prezi-detail-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.prezi-section {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.prezi-section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.prezi-section-text {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.prezi-highlight {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 212, 255, 0.1),
+    rgba(255, 0, 110, 0.1)
+  );
+  border-left: 3px solid var(--accent-primary);
+  padding: 1.2rem;
+  border-radius: 10px;
+}
+
+.prezi-innovation {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.prezi-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.prezi-list-item {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  padding-left: 1.8rem;
+  position: relative;
+}
+
+.prezi-list-item::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--accent-primary);
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.prezi-tech-list .prezi-list-item::before {
+  content: "▸";
+  color: var(--accent-secondary);
+}
+
+.prezi-link {
+  display: inline-block;
+  font-size: 1rem;
+  color: var(--accent-primary);
+  text-decoration: none;
+  padding: 0.8rem 1.5rem;
+  border: 2px solid var(--accent-primary);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  background: rgba(0, 212, 255, 0.1);
+}
+
+.prezi-link:hover {
+  background: rgba(0, 212, 255, 0.2);
+  transform: translateX(5px);
+  box-shadow: 0 5px 20px rgba(0, 212, 255, 0.3);
+}
+
+/* Navigation Arrows - Inside panel */
+.prezi-nav-arrows {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.prezi-arrow {
+  padding: 0.8rem 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.prezi-arrow:hover:not(:disabled) {
+  background: rgba(0, 212, 255, 0.2);
+  border-color: var(--accent-primary);
+  transform: scale(1.05);
+}
+
+.prezi-arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.prezi-progress {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Hint */
+.prezi-hint {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  padding: 1rem 2rem;
+  background: rgba(10, 10, 15, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  animation: fadeIn 1s ease-out 1s backwards;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .prezi-projects-grid {
+    grid-template-columns: repeat(3, 220px);
+    grid-template-rows: repeat(3, 220px);
+    gap: 2rem;
+  }
+
+  .prezi-project-circle {
+    width: 220px;
+    height: 220px;
+    padding: 1.5rem;
+  }
+
+  .prezi-circle-icon {
+    font-size: 3rem;
+  }
+
+  .prezi-circle-title {
+    font-size: 1.2rem;
+  }
+
+  .prezi-circle-subtitle {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .prezi-projects-grid {
+    grid-template-columns: repeat(3, 160px);
+    grid-template-rows: repeat(3, 160px);
+    gap: 1.5rem;
+  }
+
+  .prezi-project-circle {
+    width: 160px;
+    height: 160px;
+    padding: 1rem;
+  }
+
+  .prezi-circle-icon {
+    font-size: 2.5rem;
+  }
+
+  .prezi-circle-title {
+    font-size: 1rem;
+  }
+
+  .prezi-circle-subtitle {
+    font-size: 0.75rem;
+  }
+
+  .prezi-detail-panel {
+    width: 95%;
+    padding: 2rem 1.5rem;
+    max-height: 90vh;
+  }
+
+  .prezi-detail-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .prezi-hint {
+    font-size: 0.85rem;
+    padding: 0.8rem 1.5rem;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}

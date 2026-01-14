@@ -1,10 +1,10 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import Presentation from "./Presentation.tsx";
+import PreziPresentation from "./PreziPresentation.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Presentation />
+    <PreziPresentation />
   </StrictMode>
 );

@@ -92,7 +92,7 @@ export const projects = [
       "멀티모달 학습으로 컨텍스트 이해",
       "실패 시 자동 재시도 및 대안 경로 탐색",
     ],
-    link: "github.com/tencent-ailab/AppAgent",
+    link: "github.com/TencentQQGYLab/AppAgent",
     color: "#00d4ff",
   },
   {
@@ -164,7 +164,7 @@ export const projects = [
       "마우스 입력 및 터치 제스처 지원",
       "tmux, screen 등 터미널 멀티플렉서와 호환",
     ],
-    link: "github.com/term7/term.everything",
+    link: "github.com/mmulet/term.everything",
     color: "#00d4ff",
   },
   {
